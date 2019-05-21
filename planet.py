@@ -9,7 +9,7 @@ def plot(body):
     x, y, z = body.sphere()
     color = body.color
     ax.plot_surface(x, y, z, color=color)
-    for i in body.satalites:
+    for i in body.satellites:
         plot(i)
 
 
@@ -39,19 +39,19 @@ ax.set_zlabel("Z")
 ax.set_title("3D Test")
 
 
+# creating the sun, planets and moon
+moon = Body(1, 90, 5, "k")
+earthSats = [moon]
+sun = Body(10)
+earth = Body(3, 0, 20, satellites=earthSats, color="b")
+mars = Body(6, 90, 25, "r")
+
+
+sun.creatSatellites(earth)
+sun.creatSatellites(mars)
+
+
 # Plot the surface
-
-sun = Body(0, 10, 0, "y")
-earth = Body(20, 3, 0)
-mars = Body(25, 6, 90, "r")
-
-moon = Body(5, 1, 90, "k")
-
-sun.creatSatalites(earth)
-sun.creatSatalites(mars)
-
-earth.creatSatalites(moon)
-
 plot(sun)
 
 
