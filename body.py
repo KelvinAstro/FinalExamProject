@@ -19,7 +19,7 @@ class Body:
         color: the body's color. rgb in range [0, 1]; hex string; 
         {'b', 'g', 'r', 'c', 'm', 'y', 'k', 'w'}; or any othe matplotlib formats
 
-        satellites a list filled with Body objects. The items in the list are
+        satellites: a list filled with Body objects. The items in the list are
         the sataliltes of this body. The suns satellites would be considered the planets 
         and asteroids that orbit it.
         """
@@ -33,9 +33,9 @@ class Body:
         if satellites is None:
             self.satellites = np.array([], dtype=Body)
         else:
-            for i in satellites:
-                i.x += self.x
-                i.y += self.y
+            for sat in satellites:
+                sat.x += self.x
+                sat.y += self.y
             self.satellites = np.array(satellites)
 
     def sphere(self):
