@@ -5,10 +5,6 @@ import matplotlib.animation as animation
 
 
 class Body:
-    res = 40
-    u = np.linspace(0, 2 * np.pi, res)
-    v = np.linspace(0, np.pi, res)
-
     def __init__(self, radius, angle=0, distance=0, color="y", satellites=None):
         """Class for creating a celestial body and its satellites (e.g., the sun, planets, moons). 
         radius: the radius of the body
@@ -38,12 +34,14 @@ class Body:
                 sat.y += self.y
             self.satellites = np.array(satellites)
 
+        res = 20
+        self.u = np.linspace(0, 2 * np.pi, res)
+        self.v = np.linspace(0, np.pi, res)
+
     def sphere(self):
-        u = np.linspace(0, 2 * np.pi, 100)
-        v = np.linspace(0, np.pi, 100)
-        x = self.radius * np.outer(np.cos(u), np.sin(v)) + self.x
-        y = self.radius * np.outer(np.sin(u), np.sin(v)) + self.y
-        z = self.radius * np.outer(np.ones(np.size(u)), np.cos(v))
+        x = self.radius * np.outer(np.cos(self.u), np.sin(self.v)) + self.x
+        y = self.radius * np.outer(np.sin(self.u), np.sin(self.v)) + self.y
+        z = self.radius * np.outer(np.ones(np.size(self.u)), np.cos(self.v))
 
         return x, y, z
 
@@ -52,7 +50,9 @@ class Body:
         sat.y += self.y
         self.satellites = np.append(self.satellites, sat)
 
-    @angle setter
-    def angle(self):
-        
+    def move(self, angle):
+        print("ok")
+        self.angle += angle * np.pi / 180
+        self.x = self.distance * np.cos(self.angle)
+        self.y = self.distance * np.sin(self.angle)
 

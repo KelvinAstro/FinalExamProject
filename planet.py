@@ -13,6 +13,12 @@ def plot(body):
         plot(i)
 
 
+def animate(angle, body):
+    body.move(angle)
+    plot(body)
+    print(body, body.angle *180/ np.pi)
+
+
 # Fixing random state for reproducibility
 np.random.seed(14537)
 
@@ -40,7 +46,7 @@ ax.set_title("3D Test")
 
 
 # creating the sun, planets and moon
-moon = Body(1, 90, 5, "k")
+moon = Body(1, 90, 10, "k")
 earthSats = [moon]
 sun = Body(10)
 earth = Body(3, 0, 20, satellites=earthSats, color="b")
@@ -53,12 +59,11 @@ sun.creatSatellites(mars)
 
 # Plot the surface
 
-for i in range(10):
-    plot(sun)
-    earth.angle += i
-    
-
-
+plot(sun)
+x = 1
+planets = [earth]
+ani = animation.FuncAnimation(fig, animate, [3], fargs=(planets))
 
 
 plt.show()
+print(earth.angle)
