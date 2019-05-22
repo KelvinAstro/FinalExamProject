@@ -52,7 +52,13 @@ sun.creatSatellites(mars)
 
 
 # Plot the surface
-plot(sun)
+
+for i in range(10):
+    plot(sun)
+    earth.angle += i
+    
+
+
 
 
 plt.show()

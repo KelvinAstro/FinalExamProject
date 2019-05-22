@@ -51,3 +51,8 @@ class Body:
         sat.x += self.x
         sat.y += self.y
         self.satellites = np.append(self.satellites, sat)
+
+    @angle setter
+    def angle(self):
+        
+
