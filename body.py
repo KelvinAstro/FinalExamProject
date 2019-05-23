@@ -20,21 +20,21 @@ class Body:
         and asteroids that orbit it.
         """
         self.distance = distance
-        self.radius = radius
-        self.angle = angle * np.pi / 180
+        self.radius = radius/10
+        self.angle = angle 
         self.color = color
-        self.x = distance * np.cos(angle)
-        self.y = distance * np.sin(angle)
+        self.x = distance * np.cos(np.radians(angle))
+        self.y = distance * np.sin(np.radians(angle))
 
         if satellites is None:
             self.satellites = np.array([], dtype=Body)
         else:
             for sat in satellites:
-                sat.x += self.x
-                sat.y += self.y
+                sat.x = sat.distance * np.cos(np.radians(sat.angle) + np.radians(self.angle)) + self.x
+                sat.y = sat.distance * np.sin(np.radians(sat.angle) + np.radians(self.angle)) + self.y
             self.satellites = np.array(satellites)
 
-        res = 20
+        res = 10
         self.u = np.linspace(0, 2 * np.pi, res)
         self.v = np.linspace(0, np.pi, res)
 
@@ -45,14 +45,21 @@ class Body:
 
         return x, y, z
 
-    def creatSatellites(self, sat):
-        sat.x += self.x
-        sat.y += self.y
-        self.satellites = np.append(self.satellites, sat)
+    def creatSatellites(self, satList):
+        for sat in satList:
+            sat.x = sat.distance * np.cos(np.radians(sat.angle)  + np.radians(self.angle)) + self.x
+            sat.y = sat.distance * np.sin(np.radians(sat.angle)  + np.radians(self.angle)) + self.y
+        self.satellites = np.append(self.satellites, satList)
 
     def move(self, angle):
         print("ok")
-        self.angle += angle * np.pi / 180
-        self.x = self.distance * np.cos(self.angle)
-        self.y = self.distance * np.sin(self.angle)
+        self.angle += angle 
+        oldX, oldY = self.x, self.y
+        self.x = self.distance * np.cos(np.radians(self.angle))
+        self.y = self.distance * np.sin(np.radians(self.angle))
+        for sat in self.satellites:
+            sat.x += self.x - oldX
+            sat.y += self.y - oldY
+
+
 

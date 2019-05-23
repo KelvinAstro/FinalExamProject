@@ -8,15 +8,17 @@ from body import Body
 def plot(body):
     x, y, z = body.sphere()
     color = body.color
-    ax.plot_surface(x, y, z, color=color)
+#     ax.plot_surface(x, y, z, color=color)
+    ax.scatter(body.x, body.y, zs=0, zdir="y", c=color, label="points in (x,z)")
     for i in body.satellites:
         plot(i)
 
 
-def animate(angle, body):
-    body.move(angle)
-    plot(body)
-    print(body, body.angle *180/ np.pi)
+def animate(angle, bodys):
+    for body in bodys:
+        body.move(angle)
+        plot(body)
+        print(body, body.angle * 180 / np.pi)
 
 
 # Fixing random state for reproducibility
@@ -25,7 +27,7 @@ np.random.seed(14537)
 
 # Attaching 3D axis to the figure
 fig = plt.figure()
-ax = p3.Axes3D(fig)
+ax = p3.Axes3D(fig, azim=90, elev=0, proj_type="ortho")
 
 # Fifty lines of random 3-D lines
 
@@ -49,21 +51,25 @@ ax.set_title("3D Test")
 moon = Body(1, 90, 10, "k")
 earthSats = [moon]
 sun = Body(10)
-earth = Body(3, 0, 20, satellites=earthSats, color="b")
+earth = Body(3, 90, 20, satellites=earthSats, color="b")
 mars = Body(6, 90, 25, "r")
 
 
-sun.creatSatellites(earth)
-sun.creatSatellites(mars)
+sun.creatSatellites([earth])
+sun.creatSatellites([mars])
 
 
 # Plot the surface
 
 plot(sun)
 x = 1
-planets = [earth]
-ani = animation.FuncAnimation(fig, animate, [3], fargs=(planets))
+planets = [[earth, mars]]
+ani = animation.FuncAnimation(fig, animate, [5], fargs=(planets), interval=10)
 
+print(earth.x, earth.y)
+print(moon.x, moon.y)
+print(np.sqrt(np.square(earth.x - moon.x) + np.square(earth.y - moon.y)))
+print((np.arctan((earth.y - moon.y) / (earth.x - moon.x)) * 180 / np.pi))
 
 plt.show()
-print(earth.angle)
+
