@@ -21,13 +21,14 @@ class Body:
         the sataliltes of this body. The suns satellites would be considered the planets 
         and asteroids that orbit it.
         """
+
         self.distance = distance
-        self.radius = radius / 2
-        self.angle = angle
+        self.radius = radius
+        self.angle = np.deg2rad(angle)
         self.color = color
         self.x = distance * np.cos(np.radians(angle))
         self.y = distance * np.sin(np.radians(angle))
-        self.angularSpeed = (2 * np.pi) / (days)
+        self.angularSpeed = 2 * np.pi / days
 
         if satellites is None:
             self.satellites = np.array([], dtype=Body)
@@ -35,41 +36,36 @@ class Body:
             satellites = self.satTranslate(satellites)
             self.satellites = np.array(satellites)
 
-        res = 5
+        res = 10
         self.u = np.linspace(0, 2 * np.pi, res)
         self.v = np.linspace(0, np.pi, res)
 
     def satTranslate(self, satList):
         for sat in satList:
-            sat.x = (
-                sat.distance * np.cos(np.radians(sat.angle) + np.radians(self.angle))
-                + self.x
-            )
-            sat.y = (
-                sat.distance * np.sin(np.radians(sat.angle) + np.radians(self.angle))
-                + self.y
-            )
+            sat.angularSpeed += self.angularSpeed
+            sat.distance += self.radius
+            sat.x = (sat.distance) * np.cos(sat.angle + self.angle) + self.x
+            sat.y = (sat.distance) * np.sin(sat.angle + self.angle) + self.y
         return satList
 
     def sphere(self):
         x = self.radius * np.outer(np.cos(self.u), np.sin(self.v)) + self.x
         y = self.radius * np.outer(np.sin(self.u), np.sin(self.v)) + self.y
-        z = (self.radius/5) * np.outer(np.ones(np.size(self.u)), np.cos(self.v))
-
+        z = (self.radius) * np.outer(np.ones(np.size(self.u)), np.cos(self.v))
         return x, y, z
 
     def creatSatellites(self, satList):
         satList = self.satTranslate(satList)
         self.satellites = np.append(self.satellites, satList)
 
-    def orbit(self, angle, x=0, y=0):
-        self.angle += angle
-        self.angle = self.angle % 360
+    def orbit(self, x=0, y=0):
+        self.angle += self.angularSpeed
+        self.angle = self.angle
         oldX, oldY = self.x, self.y
-        self.x = self.distance * np.cos(np.radians(self.angle)) + x
-        self.y = self.distance * np.sin(np.radians(self.angle)) + y
+        self.x = self.distance * np.cos(self.angle) + x
+        self.y = self.distance * np.sin(self.angle) + y
         for sat in self.satellites:
-            sat.orbit((1/sat.angularSpeed) + angle, self.x, self.y)
+            sat.orbit(self.x, self.y)
             sat.x += self.x - oldX
             sat.y += self.y - oldY
 
