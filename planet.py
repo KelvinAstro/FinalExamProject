@@ -49,6 +49,8 @@ def init():
     ax.axis("off")
 
 
+
+
 # creating the sun, planets and moon
 
 mercury = Body(
@@ -78,16 +80,6 @@ saturn = Body(
 )
 
 sunSats = [mercury, venus, earth, mars, jupiter, saturn]
-
-# sunSats = [mars]
-
-
-for i in range(5):
-    r = np.random.randint(3, 12)
-    d = np.random.randint(6, 100)
-    s = np.random.randint(3, 12)
-
-
 sun = Body(20, satellites=sunSats, name="sun")
 
 # Attaching 3D axis to the figure
@@ -98,10 +90,8 @@ ax = p3.Axes3D(fig, azim=0, elev=0, proj_type="persp")
 
 # Animation
 
-# lines = [ax.plot(dat[0, 0:1], dat[1, 0:1], dat[2, 0:1])[0] for dat in sun.sa]
 ani = animation.FuncAnimation(
     fig, animate, fargs=([sun.satellites]), interval=1, init_func=init
 )
-animate(0, sun.satellites)
 
 plt.show()

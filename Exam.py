@@ -107,7 +107,6 @@ def animate(angle, bodys):
 
 def init():
     # Setting the axes properties
-
     ax.clear()
 
     x, y, z = sun.sphere()
@@ -168,10 +167,9 @@ ax = p3.Axes3D(fig, azim=0, elev=0, proj_type="persp")
 
 
 # Animation
-
 ani = animation.FuncAnimation(
     fig, animate, fargs=([sun.satellites]), interval=1, init_func=init
 )
-animate(0, sun.satellites)
+
 
 plt.show()
